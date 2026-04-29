@@ -1,0 +1,35 @@
+server:
+  appversion: 1.0.0-local
+  port: "5000"
+  pprofport: "5555"
+  mode: Development
+  jwtsecretkey: secretKey
+  cookiename: jwt-token
+  readtimeout: 10s
+  writetimeout: 10s
+  ssl: false
+  ctxdefaulttimeout: 12s
+  csrf: false
+  debug: true
+
+postgres:
+  host: localhost
+  port: "5433"
+  user: postgres
+  password: postgres
+  dbname: auth_db
+  sslmode: disable
+  driver: pgx
+
+redis:
+  host: localhost
+  port: "6379"
+  password: ""
+  db: 0
+
+logger:
+  development: true
+  disablecaller: false
+  disablestacktrace: false
+  level: info
+  encoding: console
