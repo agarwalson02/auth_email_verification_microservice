@@ -115,7 +115,7 @@ func main() {
 
 	grpcServer := grpc.NewServer(
 		
-		grpc.UnaryInterceptor(grpcHandler.AuthInterceptor()),
+		grpc.UnaryInterceptor(grpcHandler.AuthInterceptor(appLogger)),
 	)
 
 	handler := grpcHandler.NewHandler(svc)

@@ -48,7 +48,7 @@ func (r *UserRepository) GetUserByEmail(email string) (*models.User, error) {
 	return &user, nil
 }
 
-func (r *UserRepository) GetUserById(id string) (*models.User, error) {
+func (r *UserRepository) GetUserByID(id string) (*models.User, error) {
 	var user models.User
 
 	query := `

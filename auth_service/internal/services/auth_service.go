@@ -2,8 +2,8 @@ package services
 
 import (
 	"auth_service/internal/models"
-	"auth_service/internal/repository"
-	"auth_service/pkg/redis"
+	// "auth_service/internal/repository"
+	// "auth_service/pkg/redis"
 	"context"
 	"database/sql"
 	"errors"
@@ -17,11 +17,22 @@ import (
 )
 
 type AuthService struct {
-	repo  *repository.UserRepository
-	redis *redis.Client
+	repo  UserRepository
+	redis RedisClient
+}
+type UserRepository interface {
+	CreateUser(user *models.User) error
+	GetUserByEmail(email string) (*models.User, error)
+	GetUserByID(id string) (*models.User, error)
 }
 
-func NewAuthService(repo *repository.UserRepository, redis *redis.Client) *AuthService {
+type RedisClient interface {
+	SetSession(ctx context.Context, sessionID, userID string, ttl time.Duration) error
+	GetSession(ctx context.Context, sessionID string) (string, error)
+	DeleteSession(ctx context.Context, sessionID string) error
+}
+
+func NewAuthService(repo UserRepository, redis RedisClient) *AuthService {
 	return &AuthService{repo: repo, redis: redis}
 }
 
@@ -88,7 +99,7 @@ func (s *AuthService) GetMe(ctx context.Context, sessionId string) (*models.User
 	}
 
 	//fetch from db
-	user, err := s.repo.GetUserById(userId)
+	user, err := s.repo.GetUserByID(userId)
 	if err != nil {
 		return nil, err
 	}
