@@ -6,15 +6,19 @@ import (
 	"auth_service/internal/repository"
 	"auth_service/internal/services"
 	postgres "auth_service/pkg/db"
+	emailclient "auth_service/pkg/email_client"
 	"auth_service/pkg/logger"
 	redis "auth_service/pkg/redis"
+	"google.golang.org/grpc/reflection"
+
 	// "context"
 	"log"
 	"net"
 
-	"google.golang.org/grpc"
 	grpcHandler "auth_service/internal/delivery/grpc"
 	pb "auth_service/proto"
+
+	"google.golang.org/grpc"
 	// "github.com/joho/godotenv"
 )
 
@@ -74,8 +78,8 @@ func main() {
 	// }
 
 	// log.Println("User created with ID:", user.ID)
-
-	svc := services.NewAuthService(repo, redisClient)
+	emailClient, _ := emailclient.NewEmailClient("localhost:5001")
+	svc := services.NewAuthService(repo, redisClient,emailClient)
 
 	// // user := &models.User{
 	// // 	Email:     "new@example.com",
@@ -121,6 +125,7 @@ func main() {
 	handler := grpcHandler.NewHandler(svc)
 
 	pb.RegisterUserServiceServer(grpcServer, handler)
+	reflection.Register(grpcServer)
 
 	lis, err := net.Listen("tcp", ":"+cfg.Server.Port)
 	if err != nil {

@@ -2,8 +2,6 @@ package services
 
 import (
 	"auth_service/internal/models"
-	// "auth_service/internal/repository"
-	// "auth_service/pkg/redis"
 	"context"
 	"database/sql"
 	"errors"
@@ -19,6 +17,7 @@ import (
 type AuthService struct {
 	repo  UserRepository
 	redis RedisClient
+	email EmailClient
 }
 type UserRepository interface {
 	CreateUser(user *models.User) error
@@ -31,9 +30,16 @@ type RedisClient interface {
 	GetSession(ctx context.Context, sessionID string) (string, error)
 	DeleteSession(ctx context.Context, sessionID string) error
 }
+type EmailClient interface {
+	SendEmail(ctx context.Context, to, subject, body string) error
+}
 
-func NewAuthService(repo UserRepository, redis RedisClient) *AuthService {
-	return &AuthService{repo: repo, redis: redis}
+func NewAuthService(repo UserRepository, redis RedisClient, email EmailClient) *AuthService {
+	return &AuthService{
+		repo:  repo,
+		redis: redis,
+		email: email,
+	}
 }
 
 func (s *AuthService) Register(user *models.User) (*models.User, error) {
@@ -108,4 +114,29 @@ func (s *AuthService) GetMe(ctx context.Context, sessionId string) (*models.User
 
 func (s *AuthService) Logout(ctx context.Context, sessionID string) error {
 	return s.redis.DeleteSession(ctx, sessionID)
+}
+
+
+
+func (s *AuthService) SendEmail(ctx context.Context, sessionID string) error {
+
+	// 1. Validate session
+	userID, err := s.redis.GetSession(ctx, sessionID)
+	if err != nil {
+		return errors.New("invalid session")
+	}
+
+	// 2. Get user
+	user, err := s.repo.GetUserByID(userID)
+	if err != nil {
+		return err
+	}
+
+	// 3. Call email service
+	return s.email.SendEmail(
+		ctx,
+		user.Email,
+		"Welcome!",
+		"Hello " + user.FirstName + ", this is your email 🎉",
+	)
 }

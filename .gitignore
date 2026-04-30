@@ -17,4 +17,4 @@ bin/
 *.log
 
 # docker volumes
-pgdata/
+**/pgdata/

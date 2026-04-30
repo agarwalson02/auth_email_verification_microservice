@@ -9,8 +9,9 @@ import (
 func TestRegister(t *testing.T) {
 	repo := &MockRepo{users: make(map[string]*models.User)}
 	redis := &MockRedis{store: make(map[string]string)}
+	email := &MockEmailClient{}
 
-	svc := NewAuthService(repo, redis)
+	svc := NewAuthService(repo, redis, email)
 
 	user := &models.User{
 		Email:     "test@example.com",
@@ -33,8 +34,9 @@ func TestRegister(t *testing.T) {
 func TestRegisterDuplicate(t *testing.T) {
 	repo := &MockRepo{users: make(map[string]*models.User)}
 	redis := &MockRedis{store: make(map[string]string)}
+	email := &MockEmailClient{}
 
-	svc := NewAuthService(repo, redis)
+	svc := NewAuthService(repo, redis, email)
 
 	user := &models.User{
 		Email: "test@example.com",
@@ -52,10 +54,10 @@ func TestRegisterDuplicate(t *testing.T) {
 func TestLoginSuccess(t *testing.T) {
 	repo := &MockRepo{users: make(map[string]*models.User)}
 	redis := &MockRedis{store: make(map[string]string)}
+	email := &MockEmailClient{}
 
-	svc := NewAuthService(repo, redis)
+	svc := NewAuthService(repo, redis, email)
 
-	// register first
 	user := &models.User{
 		Email:    "test@example.com",
 		Password: "123456",
@@ -82,8 +84,9 @@ func TestLoginSuccess(t *testing.T) {
 func TestLoginFail(t *testing.T) {
 	repo := &MockRepo{users: make(map[string]*models.User)}
 	redis := &MockRedis{store: make(map[string]string)}
+	email := &MockEmailClient{}
 
-	svc := NewAuthService(repo, redis)
+	svc := NewAuthService(repo, redis, email)
 
 	ctx := context.Background()
 

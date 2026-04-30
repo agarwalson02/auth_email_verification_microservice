@@ -726,6 +726,118 @@ func (*LogoutResponse) Descriptor() ([]byte, []int) {
 	return file_user_proto_rawDescGZIP(), []int{13}
 }
 
+type SendEmailRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	To            string                 `protobuf:"bytes,1,opt,name=to,proto3" json:"to,omitempty"`
+	Subject       string                 `protobuf:"bytes,2,opt,name=subject,proto3" json:"subject,omitempty"`
+	Body          string                 `protobuf:"bytes,3,opt,name=body,proto3" json:"body,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SendEmailRequest) Reset() {
+	*x = SendEmailRequest{}
+	mi := &file_user_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SendEmailRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SendEmailRequest) ProtoMessage() {}
+
+func (x *SendEmailRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SendEmailRequest.ProtoReflect.Descriptor instead.
+func (*SendEmailRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *SendEmailRequest) GetTo() string {
+	if x != nil {
+		return x.To
+	}
+	return ""
+}
+
+func (x *SendEmailRequest) GetSubject() string {
+	if x != nil {
+		return x.Subject
+	}
+	return ""
+}
+
+func (x *SendEmailRequest) GetBody() string {
+	if x != nil {
+		return x.Body
+	}
+	return ""
+}
+
+type SendEmailResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SendEmailResponse) Reset() {
+	*x = SendEmailResponse{}
+	mi := &file_user_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SendEmailResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SendEmailResponse) ProtoMessage() {}
+
+func (x *SendEmailResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SendEmailResponse.ProtoReflect.Descriptor instead.
+func (*SendEmailResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *SendEmailResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *SendEmailResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
 var File_user_proto protoreflect.FileDescriptor
 
 const file_user_proto_rawDesc = "" +
@@ -775,14 +887,22 @@ const file_user_proto_rawDesc = "" +
 	"\rGetMeResponse\x12%\n" +
 	"\x04user\x18\x01 \x01(\v2\x11.userService.UserR\x04user\"\x0f\n" +
 	"\rLogoutRequest\"\x10\n" +
-	"\x0eLogoutResponse2\xb4\x03\n" +
+	"\x0eLogoutResponse\"P\n" +
+	"\x10SendEmailRequest\x12\x0e\n" +
+	"\x02to\x18\x01 \x01(\tR\x02to\x12\x18\n" +
+	"\asubject\x18\x02 \x01(\tR\asubject\x12\x12\n" +
+	"\x04body\x18\x03 \x01(\tR\x04body\"G\n" +
+	"\x11SendEmailResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage2\x80\x04\n" +
 	"\vUserService\x12G\n" +
 	"\bRegister\x12\x1c.userService.RegisterRequest\x1a\x1d.userService.RegisterResponse\x12P\n" +
 	"\vFindByEmail\x12\x1f.userService.FindByEmailRequest\x1a .userService.FindByEmailResponse\x12G\n" +
 	"\bFindById\x12\x1c.userService.FindByIdRequest\x1a\x1d.userService.FindByIdResponse\x12>\n" +
 	"\x05Login\x12\x19.userService.LoginRequest\x1a\x1a.userService.LoginResponse\x12>\n" +
 	"\x05GetMe\x12\x19.userService.GetMeRequest\x1a\x1a.userService.GetMeResponse\x12A\n" +
-	"\x06Logout\x12\x1a.userService.LogoutRequest\x1a\x1b.userService.LogoutResponseB\x0fZ\r.;userServiceb\x06proto3"
+	"\x06Logout\x12\x1a.userService.LogoutRequest\x1a\x1b.userService.LogoutResponse\x12J\n" +
+	"\tSendEmail\x12\x1d.userService.SendEmailRequest\x1a\x1e.userService.SendEmailResponseB\x0fZ\r.;userServiceb\x06proto3"
 
 var (
 	file_user_proto_rawDescOnce sync.Once
@@ -796,7 +916,7 @@ func file_user_proto_rawDescGZIP() []byte {
 	return file_user_proto_rawDescData
 }
 
-var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_user_proto_goTypes = []any{
 	(*Session)(nil),               // 0: userService.Session
 	(*User)(nil),                  // 1: userService.User
@@ -812,11 +932,13 @@ var file_user_proto_goTypes = []any{
 	(*GetMeResponse)(nil),         // 11: userService.GetMeResponse
 	(*LogoutRequest)(nil),         // 12: userService.LogoutRequest
 	(*LogoutResponse)(nil),        // 13: userService.LogoutResponse
-	(*timestamppb.Timestamp)(nil), // 14: google.protobuf.Timestamp
+	(*SendEmailRequest)(nil),      // 14: userService.SendEmailRequest
+	(*SendEmailResponse)(nil),     // 15: userService.SendEmailResponse
+	(*timestamppb.Timestamp)(nil), // 16: google.protobuf.Timestamp
 }
 var file_user_proto_depIdxs = []int32{
-	14, // 0: userService.User.created_at:type_name -> google.protobuf.Timestamp
-	14, // 1: userService.User.updated_at:type_name -> google.protobuf.Timestamp
+	16, // 0: userService.User.created_at:type_name -> google.protobuf.Timestamp
+	16, // 1: userService.User.updated_at:type_name -> google.protobuf.Timestamp
 	1,  // 2: userService.RegisterResponse.user:type_name -> userService.User
 	1,  // 3: userService.FindByEmailResponse.user:type_name -> userService.User
 	1,  // 4: userService.FindByIdResponse.user:type_name -> userService.User
@@ -828,14 +950,16 @@ var file_user_proto_depIdxs = []int32{
 	8,  // 10: userService.UserService.Login:input_type -> userService.LoginRequest
 	10, // 11: userService.UserService.GetMe:input_type -> userService.GetMeRequest
 	12, // 12: userService.UserService.Logout:input_type -> userService.LogoutRequest
-	3,  // 13: userService.UserService.Register:output_type -> userService.RegisterResponse
-	5,  // 14: userService.UserService.FindByEmail:output_type -> userService.FindByEmailResponse
-	7,  // 15: userService.UserService.FindById:output_type -> userService.FindByIdResponse
-	9,  // 16: userService.UserService.Login:output_type -> userService.LoginResponse
-	11, // 17: userService.UserService.GetMe:output_type -> userService.GetMeResponse
-	13, // 18: userService.UserService.Logout:output_type -> userService.LogoutResponse
-	13, // [13:19] is the sub-list for method output_type
-	7,  // [7:13] is the sub-list for method input_type
+	14, // 13: userService.UserService.SendEmail:input_type -> userService.SendEmailRequest
+	3,  // 14: userService.UserService.Register:output_type -> userService.RegisterResponse
+	5,  // 15: userService.UserService.FindByEmail:output_type -> userService.FindByEmailResponse
+	7,  // 16: userService.UserService.FindById:output_type -> userService.FindByIdResponse
+	9,  // 17: userService.UserService.Login:output_type -> userService.LoginResponse
+	11, // 18: userService.UserService.GetMe:output_type -> userService.GetMeResponse
+	13, // 19: userService.UserService.Logout:output_type -> userService.LogoutResponse
+	15, // 20: userService.UserService.SendEmail:output_type -> userService.SendEmailResponse
+	14, // [14:21] is the sub-list for method output_type
+	7,  // [7:14] is the sub-list for method input_type
 	7,  // [7:7] is the sub-list for extension type_name
 	7,  // [7:7] is the sub-list for extension extendee
 	0,  // [0:7] is the sub-list for field type_name
@@ -852,7 +976,7 @@ func file_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_proto_rawDesc), len(file_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   14,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

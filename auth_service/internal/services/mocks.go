@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+type MockEmailClient struct{}
+
 type MockRepo struct {
 	users map[string]*models.User
 }
@@ -50,5 +52,9 @@ func (m *MockRedis) GetSession(ctx context.Context, sessionID string) (string, e
 
 func (m *MockRedis) DeleteSession(ctx context.Context, sessionID string) error {
 	delete(m.store, sessionID)
+	return nil
+}
+
+func (m *MockEmailClient) SendEmail(ctx context.Context, to, subject, body string) error {
 	return nil
 }

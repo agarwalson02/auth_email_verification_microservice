@@ -28,52 +28,51 @@ func extractSessionFromContext(ctx context.Context) string {
 }
 
 func (h *Handler) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
-	
-	user:= &models.User{
-		Email: req.Email,
+
+	user := &models.User{
+		Email:     req.Email,
 		FirstName: req.FirstName,
-		LastName: req.LastName,
-		Password: req.Password,
-		Role: "User",
-		Avatar: req.Avatar,
+		LastName:  req.LastName,
+		Password:  req.Password,
+		Role:      "User",
+		Avatar:    req.Avatar,
 	}
 
-	createdUser,err:= h.service.Register(user)
-	if err != nil{
-		return nil,err
+	createdUser, err := h.service.Register(user)
+	if err != nil {
+		return nil, err
 	}
 
 	return &pb.RegisterResponse{
 		User: &pb.User{
-			Uuid: createdUser.ID,
-			Email: createdUser.Email,
+			Uuid:      createdUser.ID,
+			Email:     createdUser.Email,
 			FirstName: createdUser.FirstName,
-			LastName: createdUser.LastName,
-			Role: createdUser.Role,
-			Avatar: createdUser.Avatar,
+			LastName:  createdUser.LastName,
+			Role:      createdUser.Role,
+			Avatar:    createdUser.Avatar,
 		},
-	},nil
+	}, nil
 }
 
-
-//login
-func (h*Handler)Login(ctx context.Context,req *pb.LoginRequest) (*pb.LoginResponse, error){
-	user,sessionId,err:=h.service.Login(ctx,req.Email,req.Password)
-	if err != nil{
-		return nil,err
+// login
+func (h *Handler) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
+	user, sessionId, err := h.service.Login(ctx, req.Email, req.Password)
+	if err != nil {
+		return nil, err
 	}
 
 	return &pb.LoginResponse{
 		User: &pb.User{
-			Uuid: user.ID,
-			Email: user.Email,
+			Uuid:      user.ID,
+			Email:     user.Email,
 			FirstName: user.FirstName,
-			LastName: user.LastName,
-			Role: user.Role,
-			Avatar: user.Avatar,
+			LastName:  user.LastName,
+			Role:      user.Role,
+			Avatar:    user.Avatar,
 		},
 		SessionId: sessionId,
-	},nil
+	}, nil
 }
 
 func (h *Handler) GetMe(ctx context.Context, req *pb.GetMeRequest) (*pb.GetMeResponse, error) {
@@ -110,4 +109,19 @@ func (h *Handler) Logout(ctx context.Context, req *pb.LogoutRequest) (*pb.Logout
 	}
 
 	return &pb.LogoutResponse{}, nil
+}
+
+func (h *Handler) SendEmail(ctx context.Context, req *pb.SendEmailRequest) (*pb.SendEmailResponse, error) {
+
+	sessionID := extractSessionFromContext(ctx)
+
+	err := h.service.SendEmail(ctx, sessionID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.SendEmailResponse{
+		Success: true,
+		Message: "Email sent",
+	}, nil
 }
