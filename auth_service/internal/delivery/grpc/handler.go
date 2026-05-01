@@ -27,6 +27,15 @@ func extractSessionFromContext(ctx context.Context) string {
 	return val.(string)
 }
 
+func extractTokenFromContext(ctx context.Context) string {
+	val := ctx.Value(TokenKey)
+	if val == nil {
+		return ""
+	}
+
+	return val.(string)
+}
+
 func (h *Handler) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 
 	user := &models.User{
@@ -101,9 +110,9 @@ func (h *Handler) GetMe(ctx context.Context, req *pb.GetMeRequest) (*pb.GetMeRes
 
 func (h *Handler) Logout(ctx context.Context, req *pb.LogoutRequest) (*pb.LogoutResponse, error) {
 
-	sessionID := extractSessionFromContext(ctx)
+	token := extractTokenFromContext(ctx)
 
-	err := h.service.Logout(ctx, sessionID)
+	err := h.service.Logout(ctx, token)
 	if err != nil {
 		return nil, err
 	}

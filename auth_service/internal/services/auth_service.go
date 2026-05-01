@@ -2,12 +2,12 @@ package services
 
 import (
 	"auth_service/internal/models"
+	"auth_service/pkg/jwt"
 	"context"
 	"database/sql"
 	"errors"
 	"time"
 
-	"github.com/google/uuid"
 
 	// "github.com/redis/go-redis/v9"
 	// //"github.com/redis/go-redis/v9"
@@ -80,32 +80,32 @@ func (s *AuthService) Login(ctx context.Context, email, password string) (*model
 	// password compare
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
-		return nil, "Invalid email or password", nil
+		return nil, "", errors.New("invalid email or password")
 	}
 
 	//session id
-	sessionId := uuid.New().String()
+	token, err := jwt.GenerateToken(user.ID)
+	if err != nil {
+		return nil, "", err
+	}
 
 	//Store in redis
-	err = s.redis.SetSession(ctx, sessionId, user.ID, 24*time.Hour)
+	err = s.redis.SetSession(ctx, token, user.ID, 24*time.Hour)
 	if err != nil {
 		return nil, "Failed to create session", err
 	}
 
-	return user, sessionId, nil
+	return user, token, nil
 }
 
 //Get me
 
 func (s *AuthService) GetMe(ctx context.Context, sessionId string) (*models.User, error) {
 	//get user_id from redis
-	userId, err := s.redis.GetSession(ctx, sessionId)
-	if err != nil {
-		return nil, errors.New("invalid session")
-	}
-
+	userID := sessionId 
+	
 	//fetch from db
-	user, err := s.repo.GetUserByID(userId)
+	user, err := s.repo.GetUserByID(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -121,11 +121,8 @@ func (s *AuthService) Logout(ctx context.Context, sessionID string) error {
 func (s *AuthService) SendEmail(ctx context.Context, sessionID string) error {
 
 	// 1. Validate session
-	userID, err := s.redis.GetSession(ctx, sessionID)
-	if err != nil {
-		return errors.New("invalid session")
-	}
-
+	userID := sessionID 
+	
 	// 2. Get user
 	user, err := s.repo.GetUserByID(userID)
 	if err != nil {
